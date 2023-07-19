@@ -1,0 +1,109 @@
+/* 2) Design Queue using linked list. */
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <limits.h>
+// this is structure node 
+typedef struct node 
+{
+    int data;
+    struct node *next;
+}node;
+// Abstract Data Type
+typedef struct Queue
+{
+    // general properties
+    int count;
+    // since F and R are pointers to node
+    node* F;
+    node* R;
+}Queue;
+// underflow condition
+bool isEmpty(Queue *Q)
+{
+    return Q -> F == NULL;
+}
+// overflow contion do not exist in Linked list implementation
+// enqueue function
+void enqueue(Queue *Q, int data)
+{
+    // creating a node
+    node *newNode = (node *) malloc (sizeof(node));
+    // assigning data to it
+    newNode -> data = data;
+    // let newNode -> next point to NULL
+    newNode -> next = NULL;
+    // inserting first node
+    if(isEmpty(Q))
+    {
+        Q -> F = Q -> R = newNode;
+    }
+    else
+    {
+        Q -> R -> next = newNode;
+        Q -> R = newNode;
+    }
+}
+// dequeue function
+int dequeue(Queue *Q)
+{
+    // checking underflow condition
+    if (isEmpty(Q))
+    {
+        printf("Underflow");
+    }
+    else
+    {
+        // storing front data
+        int tempData = Q -> F -> data;
+        // let temp point to null
+        node *temp = Q -> F;
+        // updating front
+        Q -> F = Q -> F -> next;
+        // clearing temp from memory
+        free(temp);
+        return tempData;
+    }
+}
+// front function
+int front(Queue *Q)
+{
+    // underflow condition
+    if (isEmpty(Q))
+    {
+        return INT_MIN;
+    }
+    return Q -> F -> data;
+}
+// size function
+int QSize(Queue *Q)
+{
+    int count = 0;
+    node *temp = Q -> F;
+    while (temp != NULL)
+    {
+        temp = temp -> next;
+        count++;
+    }
+    return count;
+}
+void main() 
+{
+    // creating a Queue in heap
+    Queue *Q = (Queue *) malloc (sizeof(Queue));
+    // let F and R point to NULL
+    Q -> F = Q -> R = NULL;
+    // operation
+    enqueue(Q, 89);
+    enqueue(Q, 75);
+    enqueue(Q, 85);
+    enqueue(Q, 56);
+    printf("%d\n", QSize(Q));
+    printf("%d\n", dequeue(Q));
+    printf("%d\n", front(Q));
+    printf("%d\n", dequeue(Q));
+    printf("%d\n", QSize(Q));
+    printf("%d\n", dequeue(Q));
+    printf("%d\n", dequeue(Q));
+    printf("%d\n", dequeue(Q));
+}
